@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: hybrid-threat-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: threat_detection
+      POSTGRES_USER: threat_engine
+      POSTGRES_PASSWORD: threat_engine_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - threat_detection_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U threat_engine -d threat_detection"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  threat_detection_data:
